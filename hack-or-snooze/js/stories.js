@@ -121,10 +121,10 @@ function putUserStoriesOnPage() {
   $ownStories.empty();
 
   // loop through all of users stories and generate HTML for them
-    for (let story of currentUser.ownStories) {
-      let $story = generateStoryMarkup(story, true);
-      $ownStories.append($story);
-    }
+  for (let story of currentUser.ownStories) {
+    let $story = generateStoryMarkup(story, true);
+    $ownStories.append($story);
+  }
 
   $ownStories.show();
 }
@@ -134,10 +134,14 @@ function putFavoritesListOnPage() {
 
   $favoritedStories.empty();
 
-  // loop through all of our stories and generate HTML for them
-  for (let story of currentUser.favorites) {
-    const $story = generateStoryMarkup(story);
-    $favoritedStories.append($story);
+  if (currentUser.favorites.length === 0) {
+    $favoritedStories.append("<h5>No favorites added!</h5>");
+  } else {
+    // loop through all of users favorites and generate HTML for them
+    for (let story of currentUser.favorites) {
+      const $story = generateStoryMarkup(story);
+      $favoritedStories.append($story);
+    }
   }
 
   $favoritedStories.show();
@@ -147,6 +151,7 @@ async function toggleStoryFavorite(evt) {
   console.debug("toggleStoryFavorite");
 
   const $tgt = $(evt.target);
+  console.debug($tgt)
   const $closestLi = $tgt.closest("li");
   const storyId = $closestLi.attr("id");
   const story = storyList.stories.find(s => s.storyId === storyId);
